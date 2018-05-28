@@ -5,7 +5,7 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
 
-namespace aie {
+namespace las {
 
 OBJMesh::~OBJMesh() {
 	for (auto& c : m_meshChunks) {
