@@ -44,9 +44,9 @@ namespace las {
 
 		//TODO adding lights with parameters
 
-		void addDirectionalLight(DirectionalLight* light);
+		bool addDirectionalLight(DirectionalLight* light);
 
-		void addPointLight(PointLight* light);
+		bool addPointLight(PointLight* light);
 
 		void destroyLight(DirectionalLight* light);
 

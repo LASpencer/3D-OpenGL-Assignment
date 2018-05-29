@@ -4,6 +4,7 @@
 
 #include "Utility.h"
 #include "Instance.h"
+#include "Light.h"
 
 las::Scene::Scene() : m_instances(), m_directionalLights(), m_pointLights()
 {
@@ -12,10 +13,10 @@ las::Scene::Scene() : m_instances(), m_directionalLights(), m_pointLights()
 	glGenBuffers(1, &pointLightUBO);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, dirLightUBO);
-	glBufferData(GL_UNIFORM_BUFFER, 48 * maxDirectionalLights + 4, NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(DirectionalLight) * maxDirectionalLights + 4, NULL, GL_DYNAMIC_DRAW);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, pointLightUBO);
-	glBufferData(GL_UNIFORM_BUFFER, 64 * maxPointLights + 4, NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(PointLight) * maxPointLights + 4, NULL, GL_DYNAMIC_DRAW);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
@@ -45,17 +46,17 @@ void las::Scene::draw(Camera * camera)
 	// Copy each light into buffer
 	int numLights = m_directionalLights.size();
 	for (int i = 0; i < numLights && i < maxDirectionalLights; ++i) {
-		glBufferSubData(GL_UNIFORM_BUFFER, 48 * i, 48, m_directionalLights[i]);
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(DirectionalLight) * i, sizeof(DirectionalLight), m_directionalLights[i]);
 	}
-	glBufferSubData(GL_UNIFORM_BUFFER, 48 * maxDirectionalLights, 4, &numLights);
+	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(DirectionalLight) * maxDirectionalLights, 4, &numLights);
 
 	// Copy point light into buffer
 	glBindBuffer(GL_UNIFORM_BUFFER, pointLightUBO);
 	numLights = m_pointLights.size();
 	for (int i = 0; i < numLights && i < maxPointLights; ++i) {
-		glBufferSubData(GL_UNIFORM_BUFFER, 64 * i, 64, m_pointLights[i]);
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(PointLight) * i, sizeof(PointLight), m_pointLights[i]);
 	}
-	glBufferSubData(GL_UNIFORM_BUFFER, 64 * maxPointLights, 4, &numLights);
+	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(PointLight) * maxPointLights, 4, &numLights);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
@@ -108,16 +109,28 @@ void las::Scene::setLights(std::vector<PointLight*>& lights)
 	m_pointLights = lights;
 }
 
-void las::Scene::addDirectionalLight(DirectionalLight * light)
+bool las::Scene::addDirectionalLight(DirectionalLight * light)
 {
-	//TODO return false if too many lights?
-	m_directionalLights.push_back(light);
+	// return false if too many lights
+	if (m_directionalLights.size() < maxDirectionalLights) {
+		m_directionalLights.push_back(light);
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
-void las::Scene::addPointLight(PointLight * light)
+bool las::Scene::addPointLight(PointLight * light)
 {
-	//TODO return false if too many lights?
-	m_pointLights.push_back(light);
+	// return false if too many lights
+	if (m_pointLights.size() < maxPointLights) {
+		m_pointLights.push_back(light);
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 void las::Scene::destroyLight(DirectionalLight * light)
