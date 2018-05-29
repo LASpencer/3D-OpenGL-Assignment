@@ -170,12 +170,16 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OBJMesh.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application3D.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Mesh.h" />
     <ClInclude Include="OBJMesh.h" />
+    <ClInclude Include="RenderTarget.h" />
+    <ClInclude Include="ScreenQuad.h" />
+    <ClInclude Include="Shader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
