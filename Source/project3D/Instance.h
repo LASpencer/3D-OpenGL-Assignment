@@ -6,8 +6,10 @@
 
 namespace las {
 	class Scene;
-	// 
+	class Camera;
+	// Instance of a mesh to draw, including transform and shader to apply
 	class Instance {
+	public:
 		Instance();
 
 		Instance(glm::vec3 pos, glm::vec3 rotation, glm::vec3 scale, aie::ShaderProgram* shader, OBJMesh* mesh);
@@ -30,7 +32,7 @@ namespace las {
 		OBJMesh* getMesh() { return m_mesh; }
 		void setMesh(OBJMesh* mesh);
 
-		void draw(glm::mat4 pv, Scene* scene);
+		void draw(Camera* camera, Scene* scene);
 
 	protected:
 		glm::mat4 m_transform;

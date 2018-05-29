@@ -1,11 +1,13 @@
 #include "Instance.h"
-#include "Scene.h"
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
+
+#include "Scene.h"
+#include "Camera.h"
 
 las::Instance::Instance()
 {
@@ -50,14 +52,15 @@ void las::Instance::setMesh(OBJMesh * mesh)
 	m_mesh = mesh;
 }
 
-void las::Instance::draw(glm::mat4 pv, Scene * scene)
+void las::Instance::draw(las::Camera* camera, Scene * scene)
 {
 	calculateTransform();
 
 	m_shader->bind();
-	m_shader->bindUniform("ProjectionViewModel", pv * m_transform);
+	m_shader->bindUniform("ProjectionViewModel", camera->getProjectionView() * m_transform);
 	m_shader->bindUniform("ModelMatrix", m_transform);
 	m_shader->bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_transform)));
+	m_shader->bindUniform("CameraPosition", camera->getPosition());
 	scene->bindShaderUniforms(m_shader);
 	m_mesh->draw();
 }

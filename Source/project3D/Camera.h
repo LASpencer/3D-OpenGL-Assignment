@@ -24,6 +24,8 @@ namespace las {
 
 		void setPosition(glm::vec3 position);
 
+		glm::vec3 getPosition();
+
 		glm::mat4 getWorldTransform();
 
 		glm::mat4 getView();

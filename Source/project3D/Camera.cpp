@@ -59,6 +59,11 @@ void Camera::setPosition(glm::vec3 position)
 	dirtyView = true;
 }
 
+glm::vec3 las::Camera::getPosition()
+{
+	return glm::vec3(worldTransform[3]);
+}
+
 glm::mat4 Camera::getWorldTransform()
 {
 	return worldTransform;
