@@ -23,6 +23,7 @@ public:
 		glm::vec4 tangent;	// added to attrib location 3
 	};
 
+	// TODO maybe seperate material from mesh? (load lets you pass a material reference to write to?)
 	// a basic material
 	class Material {
 	public:
