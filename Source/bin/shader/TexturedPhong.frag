@@ -169,7 +169,8 @@ Intensities calculatePointLight(PointLight light, vec3 N, vec3 V){
 
 Intensities calculateSpotLight(SpotLight light, vec3 N, vec3 V){
 	Intensities intensities;
-	//TODO
+	//TODO like point light, but also angle attenuation
+	// subract phi from angle, divide by theta, clamp to 0-1, that's how much to decrease light by?
 	
 	return intensities;
 }
