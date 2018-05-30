@@ -1,31 +1,23 @@
 #include "Scene.h"
 
-#include <gl_core_4_4.h>
-
 #include "Utility.h"
 #include "Instance.h"
 #include "Light.h"
 
 las::Scene::Scene() : m_instances(), m_directionalLights(), m_pointLights()
 {
-	// TODO write "GenerateLightBuffer<T>" function
 	// Create lighting buffers
-	glGenBuffers(1, &dirLightUBO);
-	glGenBuffers(1, &pointLightUBO);
+	dirLightUBO = generateLightBuffer<DirectionalLight>(maxDirectionalLights);
+	pointLightUBO = generateLightBuffer<PointLight>(maxPointLights);
+	spotLightUBO = generateLightBuffer<SpotLight>(maxSpotLights);
 
-	glBindBuffer(GL_UNIFORM_BUFFER, dirLightUBO);
-	glBufferData(GL_UNIFORM_BUFFER, sizeof(DirectionalLight) * maxDirectionalLights + 4, NULL, GL_DYNAMIC_DRAW);
-
-	glBindBuffer(GL_UNIFORM_BUFFER, pointLightUBO);
-	glBufferData(GL_UNIFORM_BUFFER, sizeof(PointLight) * maxPointLights + 4, NULL, GL_DYNAMIC_DRAW);
-
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 las::Scene::~Scene()
 {
 	glDeleteBuffers(1, &dirLightUBO);
 	glDeleteBuffers(1, &pointLightUBO);
+	glDeleteBuffers(1, &spotLightUBO);
 
 	for (DirectionalLight* l : m_directionalLights) {
 		delete l;
@@ -42,31 +34,11 @@ las::Scene::~Scene()
 
 void las::Scene::draw(Camera * camera)
 {
-	//TODO write "BindLightBuffer<T>()" function
-	// Copy directional light data to dirLightUBO block
-	glBindBuffer(GL_UNIFORM_BUFFER, dirLightUBO);
-	// Copy each light into buffer
-	int numLights = m_directionalLights.size();
-	for (int i = 0; i < numLights && i < maxDirectionalLights; ++i) {
-		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(DirectionalLight) * i, sizeof(DirectionalLight), m_directionalLights[i]);
-	}
-	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(DirectionalLight) * maxDirectionalLights, 4, &numLights);
+	// Update light info
+	bindLightBuffer(m_directionalLights, dirLightUBO, dirLightBufferBindPoint, maxDirectionalLights);
+	bindLightBuffer(m_pointLights, pointLightUBO, pointLightBufferBindPoint, maxPointLights);
+	bindLightBuffer(m_spotLights, spotLightUBO, spotLightBufferBindPoint, maxSpotLights);
 
-	// Copy point light into buffer
-	glBindBuffer(GL_UNIFORM_BUFFER, pointLightUBO);
-	numLights = m_pointLights.size();
-	for (int i = 0; i < numLights && i < maxPointLights; ++i) {
-		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(PointLight) * i, sizeof(PointLight), m_pointLights[i]);
-	}
-	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(PointLight) * maxPointLights, 4, &numLights);
-
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-	// Set binding points
-	glBindBufferBase(GL_UNIFORM_BUFFER, dirLightBufferBindPoint, dirLightUBO);
-	glBindBufferBase(GL_UNIFORM_BUFFER, pointLightBufferBindPoint, pointLightUBO);
-
-	//TODO spotlights
 
 	for (Instance* i : m_instances) {
 		i->draw(camera, this);
@@ -76,16 +48,9 @@ void las::Scene::draw(Camera * camera)
 bool las::Scene::bindShaderUniforms(aie::ShaderProgram * shader)
 {
 	// Bind lights to shader
-	unsigned int dirLightIndex = glGetUniformBlockIndex(shader->getHandle(), "DirLights");
-	unsigned int pointLightIndex = glGetUniformBlockIndex(shader->getHandle(), "PointLights");
-
-	if (dirLightIndex != GL_INVALID_INDEX) {
-		glUniformBlockBinding(shader->getHandle(), dirLightIndex, dirLightBufferBindPoint);
-	}
-
-	if (pointLightIndex != GL_INVALID_INDEX) {
-		glUniformBlockBinding(shader->getHandle(), pointLightIndex, pointLightBufferBindPoint);
-	}
+	bindUBO(shader, "DirLights", dirLightBufferBindPoint);
+	bindUBO(shader, "PointLights", pointLightBufferBindPoint);
+	bindUBO(shader, "SpotLights", spotLightBufferBindPoint);
 
 	shader->bindUniform("Ia", m_ambientLight);
 
@@ -193,4 +158,16 @@ void las::Scene::clearInstances()
 		delete i;
 	}
 	m_instances.clear();
+}
+
+inline bool las::Scene::bindUBO(aie::ShaderProgram * shader, const char * ubName, unsigned int uboBindPoint)
+{
+	unsigned int blockIndex = glGetUniformBlockIndex(shader->getHandle(), ubName);
+	if (blockIndex != GL_INVALID_INDEX) {
+		glUniformBlockBinding(shader->getHandle(), blockIndex, uboBindPoint);
+		return true;
+	}
+	else {
+		return false;
+	}
 }

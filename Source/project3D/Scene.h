@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 
+#include <gl_core_4_4.h>
 #include <glm/glm.hpp>
 
 #include "Shader.h"
@@ -12,6 +13,7 @@ namespace las {
 	class Instance;
 	class PointLight;
 	class DirectionalLight;
+	class SpotLight;
 
 	class Scene {
 	public:
@@ -83,7 +85,9 @@ namespace las {
 		unsigned int generateLightBuffer(int maxLights);
 
 		template<typename T>
-		void BindLightBuffer(const std::vector<T*>& lights, unsigned int buffer, int maxLights);
+		void bindLightBuffer(const std::vector<T*>& lights, unsigned int buffer, unsigned int uboBindPoint, int maxLights);
+
+		bool bindUBO(aie::ShaderProgram* shader, const char* ubName, unsigned int uboBindPoint);
 	};
 	template<typename T>
 	inline unsigned int Scene::generateLightBuffer(int maxLights)
@@ -95,8 +99,10 @@ namespace las {
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 	template<typename T>
-	inline void Scene::BindLightBuffer(const std::vector<T*>& lights, unsigned int buffer, int maxLights)
+	inline void Scene::bindLightBuffer(const std::vector<T*>& lights, unsigned int buffer, unsigned int uboBindPoint, int maxLights)
 	{
+		// Update buffer data
+		// Format is array of structs followed by size
 		glBindBuffer(GL_UNIFORM_BUFFER, buffer);
 		int numLights = std::min(lights.size(), maxLights);
 		for (int i = 0; i < numLights; ++i) {
@@ -104,5 +110,8 @@ namespace las {
 		}
 		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(T) * maxLights, 4, &numLights);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		// Set binding point
+		glBindBufferBase(GL_UNIFORM_BUFFER, uboBindPoint, buffer);
 	}
 }
