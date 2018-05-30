@@ -4,7 +4,7 @@
 #include "Instance.h"
 #include "Light.h"
 
-las::Scene::Scene() : m_instances(), m_directionalLights(), m_pointLights()
+las::Scene::Scene() : m_instances(), m_directionalLights(), m_pointLights(), m_spotLights()
 {
 	// Create lighting buffers
 	dirLightUBO = generateLightBuffer<DirectionalLight>(maxDirectionalLights);
@@ -24,6 +24,10 @@ las::Scene::~Scene()
 	}
 
 	for (PointLight* l : m_pointLights) {
+		delete l;
+	}
+
+	for (SpotLight* l : m_spotLights) {
 		delete l;
 	}
 
@@ -102,6 +106,17 @@ bool las::Scene::addPointLight(PointLight * light)
 	}
 }
 
+bool las::Scene::addSpotLight(SpotLight * light)
+{
+	if (m_spotLights.size() < maxSpotLights) {
+		m_spotLights.push_back(light);
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 void las::Scene::destroyLight(DirectionalLight * light)
 {
 	removeEraseFromVector(m_directionalLights, light);
@@ -111,6 +126,12 @@ void las::Scene::destroyLight(DirectionalLight * light)
 void las::Scene::destroyLight(PointLight * light)
 {
 	removeEraseFromVector(m_pointLights, light);
+	delete light;
+}
+
+void las::Scene::destroyLight(SpotLight * light)
+{
+	removeEraseFromVector(m_spotLights, light);
 	delete light;
 }
 

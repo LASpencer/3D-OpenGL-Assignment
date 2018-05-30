@@ -45,6 +45,7 @@ namespace las {
 
 		void setLights(std::vector<DirectionalLight*>& lights);
 		void setLights(std::vector<PointLight*>& lights);
+		void setLights(std::vector<SpotLight*>& lights);
 
 		//TODO adding lights with parameters
 
@@ -52,9 +53,13 @@ namespace las {
 
 		bool addPointLight(PointLight* light);
 
+		bool addSpotLight(SpotLight* light);
+
 		void destroyLight(DirectionalLight* light);
 
 		void destroyLight(PointLight* light);
+
+		void destroyLight(SpotLight* light);
 
 		void clearLights();
 
