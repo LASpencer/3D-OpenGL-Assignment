@@ -18,9 +18,11 @@ namespace las {
 		// Binding points for light uniform buffer
 		static const int dirLightBufferBindPoint = 1;
 		static const int pointLightBufferBindPoint = 2;
+		static const int spotLightBufferBindPoint = 3;
 
 		static const int maxDirectionalLights = 32;	// If changed, make sure changed in all shaders
 		static const int maxPointLights = 32;
+		static const int maxSpotLights = 32;
 
 		Scene();
 
@@ -71,8 +73,36 @@ namespace las {
 
 		std::vector<DirectionalLight*> m_directionalLights;
 		std::vector<PointLight*> m_pointLights;
+		std::vector<SpotLight*> m_spotLights;
 
 		unsigned int dirLightUBO;
 		unsigned int pointLightUBO;
+		unsigned int spotLightUBO;
+
+		template<typename T>
+		unsigned int generateLightBuffer(int maxLights);
+
+		template<typename T>
+		void BindLightBuffer(const std::vector<T*>& lights, unsigned int buffer, int maxLights);
 	};
+	template<typename T>
+	inline unsigned int Scene::generateLightBuffer(int maxLights)
+	{
+		unsigned int buffer;
+		glGenBuffers(1, &buffer);
+		glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+		glBufferData(GL_UNIFORM_BUFFER, sizeof(T) * maxLights + 4, NULL, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	}
+	template<typename T>
+	inline void Scene::BindLightBuffer(const std::vector<T*>& lights, unsigned int buffer, int maxLights)
+	{
+		glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+		int numLights = std::min(lights.size(), maxLights);
+		for (int i = 0; i < numLights; ++i) {
+			glBufferSubData(GL_UNIFORM_BUFFER, sizeof(T) * i, sizeof(T), lights[i]);
+		}
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(T) * maxLights, 4, &numLights);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	}
 }

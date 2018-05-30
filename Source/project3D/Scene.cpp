@@ -8,6 +8,7 @@
 
 las::Scene::Scene() : m_instances(), m_directionalLights(), m_pointLights()
 {
+	// TODO write "GenerateLightBuffer<T>" function
 	// Create lighting buffers
 	glGenBuffers(1, &dirLightUBO);
 	glGenBuffers(1, &pointLightUBO);
@@ -41,6 +42,7 @@ las::Scene::~Scene()
 
 void las::Scene::draw(Camera * camera)
 {
+	//TODO write "BindLightBuffer<T>()" function
 	// Copy directional light data to dirLightUBO block
 	glBindBuffer(GL_UNIFORM_BUFFER, dirLightUBO);
 	// Copy each light into buffer
@@ -63,6 +65,8 @@ void las::Scene::draw(Camera * camera)
 	// Set binding points
 	glBindBufferBase(GL_UNIFORM_BUFFER, dirLightBufferBindPoint, dirLightUBO);
 	glBindBufferBase(GL_UNIFORM_BUFFER, pointLightBufferBindPoint, pointLightUBO);
+
+	//TODO spotlights
 
 	for (Instance* i : m_instances) {
 		i->draw(camera, this);

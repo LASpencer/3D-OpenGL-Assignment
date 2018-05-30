@@ -31,15 +31,16 @@ namespace las {
 	};
 
 	struct SpotLight {
-		
+		SpotLight() {};
+
 		glm::vec4 position;
 		glm::vec3 direction;	glm::float32_t pad1;
 		glm::vec3 diffuse;		glm::float32_t pad2;
 		glm::vec3 specular;		glm::float32_t pad3;
 		float phi;
 		float theta;
-		float pad4;
-		float pad5;
+		float linearAttenuation;
+		float quadraticAttenuation;
 
 	};
 }
