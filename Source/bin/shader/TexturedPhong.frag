@@ -169,8 +169,33 @@ Intensities calculatePointLight(PointLight light, vec3 N, vec3 V){
 
 Intensities calculateSpotLight(SpotLight light, vec3 N, vec3 V){
 	Intensities intensities;
-	//TODO like point light, but also angle attenuation
-	// subract phi from angle, divide by theta, clamp to 0-1, that's how much to decrease light by?
 	
+	vec3 displacement = vPosition.xyz - light.position.xyz;
+	vec3 direction = normalize(displacement);
+	vec3 lightDirection = normalize(light.direction.xyz);
+	float distance = length(displacement);
+
+	vec3 R = reflect(direction, N);
+	
+	// calculate lambert term
+	float lambertTerm = max(0, min(1, dot(N, -direction)));
+	
+	// calculate specular terms
+	float specularTerm = pow( max( 0, dot(R, V)), specularPower);
+	
+	// Calculate attenuation
+	float distanceAttenuation = 1.0 / (1.0 + light.linAtten * distance + light.quadAtten * distance * distance);
+	
+	float cosPhi = cos(light.phi);
+	float cosTheta = cos(light.phi + light.theta);
+	float cosAngle = dot(direction, lightDirection);
+	float angleAttenuation = clamp((cosAngle - cosTheta) / (cosPhi - cosTheta), 0.0f, 1.0f);
+	
+	float attenuation = distanceAttenuation * angleAttenuation;
+	
+	intensities.diffuse = light.diffuse.xyz * attenuation * lambertTerm;
+	intensities.specular = light.specular.xyz * attenuation * specularTerm;
+	
+	// TODO test this works correctly
 	return intensities;
 }
