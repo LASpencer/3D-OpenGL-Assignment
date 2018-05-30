@@ -5,6 +5,7 @@
 namespace las {
 	class FlyCamera : public Camera {
 	public:
+		// TODO better constructor
 		FlyCamera(glm::vec3 pos, glm::vec3 target);
 
 		virtual ~FlyCamera();

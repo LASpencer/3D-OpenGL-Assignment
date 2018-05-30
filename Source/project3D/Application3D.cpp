@@ -31,8 +31,7 @@ bool Application3D::startup() {
 	Gizmos::create(10000, 10000, 10000, 10000);
 
 	// create simple camera transforms
-	m_camera = new Camera();
-	m_camera->setLookAt(vec3(10), vec3(0));
+	m_camera = new FlyCamera(vec3(10), vec3(0));
 	m_camera->setPerspective(glm::pi<float>() * 0.25f,
 		getWindowWidth() / (float)getWindowHeight(),
 		0.1f, 1000.f);
@@ -62,9 +61,12 @@ bool Application3D::startup() {
 
 	// Set up lighting
 	m_scene->setAmbient(vec3(0.05));
-	m_scene->addDirectionalLight(new DirectionalLight(vec3(-1, -1, 0), vec3(0, 0, 1), vec3(0, 0, 1)));
-	m_scene->addSpotLight(new SpotLight(vec4(2, 0, -2, 1), vec3(-1, 1, 1), vec3(3, 0, 0), vec3(3, 0, 0), 0.3, 0.1, 0.03, 0.003));
-	m_scene->addPointLight(new PointLight(vec4(1, 2, 1, 1), vec3(0,1,0), vec3(0,1,0), 0.03, 0.003));
+	m_directionalLight = new DirectionalLight(vec3(-1, -1, 0), vec3(0, 0, 1), vec3(0, 0, 1));
+	m_spotLight = new SpotLight(vec4(2, 0, -2, 1), vec3(-1, 1, 1), vec3(3, 0, 0), vec3(3, 0, 0), 0.3, 0.1, 0.03, 0.003);
+	m_pointLight = new PointLight(vec4(1, 2, 1, 1), vec3(0, 1, 0), vec3(0, 1, 0), 0.03, 0.003);
+	m_scene->addDirectionalLight(m_directionalLight);
+	m_scene->addSpotLight(m_spotLight);
+	m_scene->addPointLight(m_pointLight);
 
 	return true;
 }
@@ -72,6 +74,7 @@ bool Application3D::startup() {
 void Application3D::shutdown() {
 
 	Gizmos::destroy();
+	delete m_camera;
 	delete m_scene;
 }
 
@@ -82,8 +85,6 @@ void Application3D::update(float deltaTime) {
 
 	// update camera
 	m_camera->update(deltaTime);
-	//HACK
-	m_camera->setLookAt(vec3(glm::sin(time) * 10, 10, glm::cos(time) * 10), vec3(0));
 
 	// wipe the gizmos clean for this frame
 	Gizmos::clear();
@@ -112,6 +113,27 @@ void Application3D::update(float deltaTime) {
 
 	ImGui::Begin("Lights");
 	//TODO stuff to control lights
+	//TODO also have light intensity?
+	ImGui::Text("Directional Light");
+	//HACK
+	ImGui::ColorEdit3("Diffuse##directional", &m_directionalLight->diffuse.r);
+	ImGui::ColorEdit3("Specular##directoinal", &m_directionalLight->specular.r);
+	//TODO direction
+	//TODO maybe button/checkbox to force same colour?
+	ImGui::Text("Point Light");
+	ImGui::ColorEdit3("Diffuse##point", &m_pointLight->diffuse.r);
+	ImGui::ColorEdit3("Specular##point", &m_pointLight->specular.r);
+	ImGui::DragFloat3("Position##point", &m_pointLight->position.x);
+	ImGui::InputFloat("Linear Attenuation##point", &m_pointLight->linearAttenuation);
+	ImGui::InputFloat("Quadratic Attenuation##point", &m_pointLight->quadraticAttenuation);
+	ImGui::Text("Spot Light");
+	ImGui::ColorEdit3("Diffuse##spot", &m_spotLight->diffuse.r);
+	ImGui::ColorEdit3("Specular##spot", &m_spotLight->specular.r);
+	ImGui::DragFloat3("Position##spot", &m_spotLight->position.x);
+	//TODO directoin
+	ImGui::InputFloat("Linear Attenuation##spot", &m_spotLight->linearAttenuation);
+	ImGui::InputFloat("Quadratic Attenuation##spot", &m_spotLight->quadraticAttenuation);
+	//TODO
 	ImGui::End();
 
 	// quit if we press escape

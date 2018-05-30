@@ -34,5 +34,9 @@ namespace las {
 		aie::ShaderProgram		m_texturedPhong;
 
 		OBJMesh					m_spearMesh;
+
+		DirectionalLight*		m_directionalLight;
+		PointLight*				m_pointLight;
+		SpotLight*				m_spotLight;
 	};
 }
