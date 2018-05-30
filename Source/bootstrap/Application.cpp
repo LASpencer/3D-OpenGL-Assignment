@@ -64,11 +64,11 @@ void Application::destroyWindow() {
 	glfwTerminate();
 }
 
-void Application::run(const char* title, int width, int height, bool fullscreen) {
+bool Application::run(const char* title, int width, int height, bool fullscreen) {
 
+	bool success = createWindow(title, width, height, fullscreen) && startup();
 	// start game loop if successfully initialised
-	if (createWindow(title,width,height, fullscreen) &&
-		startup()) {
+	if (success) {
 
 		// variables for timing
 		double prevTime = glfwGetTime();
@@ -125,6 +125,7 @@ void Application::run(const char* title, int width, int height, bool fullscreen)
 	// cleanup
 	shutdown();
 	destroyWindow();
+	return success;
 }
 
 bool Application::hasWindowClosed() {

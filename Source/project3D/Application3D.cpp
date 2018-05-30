@@ -22,6 +22,8 @@ bool Application3D::startup() {
 	
 	setBackgroundColour(0.25f, 0.25f, 0.25f);
 
+	m_scene = new Scene();
+
 	// initialise gizmo primitive counts
 	Gizmos::create(10000, 10000, 10000, 10000);
 
@@ -32,12 +34,31 @@ bool Application3D::startup() {
 		getWindowWidth() / (float)getWindowHeight(),
 		0.1f, 1000.f);
 
+	m_texturedPhong.loadShader(aie::eShaderStage::VERTEX, "./shaders/texturedPhong.vert");
+	m_texturedPhong.loadShader(aie::eShaderStage::FRAGMENT, "./shaders/texturedPhong.frag");
+	
+	if (m_texturedPhong.link() == false) {
+		printf("Textured Phong shader error: %s\n", m_texturedPhong.getLastError());
+		return false;
+	}
+
+	// Load obj files
+	if (m_spearMesh.load("./models/soulspear.obj", true, true) == false) {
+		printf("Could not load Spear mesh\n");
+	}
+
+	m_scene->addInstance(new Instance(vec3(0), vec3(0), vec3(1), &m_texturedPhong, &m_spearMesh));
+
+	// TODO setup lighting
+	m_scene->setAmbient(vec3(1));
+
 	return true;
 }
 
 void Application3D::shutdown() {
 
 	Gizmos::destroy();
+	delete m_scene;
 }
 
 void Application3D::update(float deltaTime) {
@@ -68,21 +89,7 @@ void Application3D::update(float deltaTime) {
 	// add a transform so that we can see the axis
 	Gizmos::addTransform(mat4(1));
 
-	// demonstrate a few shapes
-	Gizmos::addAABBFilled(vec3(0), vec3(1), vec4(0, 0.5f, 1, 0.25f));
-	Gizmos::addSphere(vec3(5, 0, 5), 1, 8, 8, vec4(1, 0, 0, 0.5f));
-	Gizmos::addRing(vec3(5, 0, -5), 1, 1.5f, 8, vec4(0, 1, 0, 1));
-	Gizmos::addDisk(vec3(-5, 0, 5), 1, 16, vec4(1, 1, 0, 1));
-	Gizmos::addArc(vec3(-5, 0, -5), 0, 2, 1, 8, vec4(1, 0, 1, 1));
-
-	mat4 t = glm::rotate(mat4(1), time, glm::normalize(vec3(1, 1, 1)));
-	t[3] = vec4(-2, 0, 0, 1);
-	Gizmos::addCylinderFilled(vec3(0), 0.5f, 1, 5, vec4(0, 1, 1, 1), &t);
-
-	// demonstrate 2D gizmos
-	Gizmos::add2DAABB(glm::vec2(getWindowWidth() / 2, 100),
-					  glm::vec2(getWindowWidth() / 2 * (fmod(getTime(), 3.f) / 3), 20),
-					  vec4(0, 1, 1, 1));
+	m_scene->update(deltaTime);
 
 	// quit if we press escape
 	aie::Input* input = aie::Input::getInstance();
@@ -98,6 +105,8 @@ void Application3D::draw() {
 
 	// update perspective in case window resized
 	m_camera->setAspectRatio(getWindowWidth() / (float)getWindowHeight());
+
+	m_scene->draw(m_camera);
 
 	// draw 3D gizmos
 	Gizmos::draw(m_camera->getProjectionView());

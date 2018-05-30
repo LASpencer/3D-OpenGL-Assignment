@@ -189,6 +189,10 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Utility.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin\shader\TexturedPhong.frag" />
+    <None Include="..\bin\shader\TexturedPhong.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

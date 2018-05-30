@@ -3,10 +3,12 @@
 int main() {
 	
 	// allocation
-	auto app = new Application3D();
+	auto app = new las::Application3D();
 
 	// initialise and loop
-	app->run("AIE", 1280, 720, false);
+	if (!app->run("OpenGL Graphics Assignment", 1280, 720, false)) {
+		system("pause");
+	}
 
 	// deallocation
 	delete app;

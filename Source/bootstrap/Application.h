@@ -16,7 +16,7 @@ public:
 	// creates a window and begins the game loop which calls update() and draw() repeatedly
 	// it first calls startup() and if that succeeds it then starts the loop,
 	// ending with shutdown() if m_gameOver is true
-	void run(const char* title, int width, int height, bool fullscreen);
+	bool run(const char* title, int width, int height, bool fullscreen);
 
 	// these functions must be implemented by a derived class
 	virtual bool startup() = 0;
