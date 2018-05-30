@@ -3,6 +3,9 @@
 #include "Input.h"
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include "imgui.h"
+
+#include "Light.h"
 
 using glm::vec3;
 using glm::vec4;
@@ -49,8 +52,19 @@ bool Application3D::startup() {
 
 	m_scene->addInstance(new Instance(vec3(0), vec3(0), vec3(1), &m_texturedPhong, &m_spearMesh));
 
-	// TODO setup lighting
-	m_scene->setAmbient(vec3(1));
+	m_scene->addInstance(new Instance(vec3(2,0,2), vec3(1), vec3(1), &m_texturedPhong, &m_spearMesh));
+
+	m_scene->addInstance(new Instance(vec3(-2, 0, 2), vec3(0), vec3(2,0.5,3), &m_texturedPhong, &m_spearMesh));
+
+	m_scene->addInstance(new Instance(vec3(-2, 0, -2), vec3(1), vec3(2, 0.5, 3), &m_texturedPhong, &m_spearMesh));
+
+	m_scene->addInstance(new Instance(vec3(3, 0, -3), vec3(0), vec3(1), &m_texturedPhong, &m_spearMesh));
+
+	// Set up lighting
+	m_scene->setAmbient(vec3(0.05));
+	m_scene->addDirectionalLight(new DirectionalLight(vec3(-1, -1, 0), vec3(0, 0, 1), vec3(0, 0, 1)));
+	m_scene->addSpotLight(new SpotLight(vec4(2, 0, -2, 1), vec3(-1, 1, 1), vec3(3, 0, 0), vec3(3, 0, 0), 0.3, 0.1, 0.03, 0.003));
+	m_scene->addPointLight(new PointLight(vec4(1, 2, 1, 1), vec3(0,1,0), vec3(0,1,0), 0.03, 0.003));
 
 	return true;
 }
@@ -90,6 +104,15 @@ void Application3D::update(float deltaTime) {
 	Gizmos::addTransform(mat4(1));
 
 	m_scene->update(deltaTime);
+
+	// ImGui display
+	ImGui::Begin("Details");
+	ImGui::Text("FPS: %i", getFPS());
+	ImGui::End();
+
+	ImGui::Begin("Lights");
+	//TODO stuff to control lights
+	ImGui::End();
 
 	// quit if we press escape
 	aie::Input* input = aie::Input::getInstance();

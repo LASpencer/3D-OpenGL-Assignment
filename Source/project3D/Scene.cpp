@@ -43,7 +43,6 @@ void las::Scene::draw(Camera * camera)
 	bindLightBuffer(m_pointLights, pointLightUBO, pointLightBufferBindPoint, maxPointLights);
 	bindLightBuffer(m_spotLights, spotLightUBO, spotLightBufferBindPoint, maxSpotLights);
 
-
 	for (Instance* i : m_instances) {
 		i->draw(camera, this);
 	}

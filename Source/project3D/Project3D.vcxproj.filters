@@ -82,10 +82,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\bin\shader\TexturedPhong.frag">
+    <None Include="..\bin\shaders\TexturedPhong.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\bin\shader\TexturedPhong.vert">
+    <None Include="..\bin\shaders\TexturedPhong.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

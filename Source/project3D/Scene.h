@@ -103,6 +103,7 @@ namespace las {
 		glBindBuffer(GL_UNIFORM_BUFFER, buffer);
 		glBufferData(GL_UNIFORM_BUFFER, sizeof(T) * maxLights + 4, NULL, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		return buffer;
 	}
 	template<typename T>
 	inline void Scene::bindLightBuffer(const std::vector<T*>& lights, unsigned int buffer, unsigned int uboBindPoint, unsigned int maxLights)
@@ -110,7 +111,7 @@ namespace las {
 		// Update buffer data
 		// Format is array of structs followed by size
 		glBindBuffer(GL_UNIFORM_BUFFER, buffer);
-		size_t numLights = std::min(lights.size(), maxLights);
+		size_t numLights = std::min(lights.size(), (size_t)maxLights);
 		for (int i = 0; i < numLights; ++i) {
 			glBufferSubData(GL_UNIFORM_BUFFER, sizeof(T) * i, sizeof(T), lights[i]);
 		}

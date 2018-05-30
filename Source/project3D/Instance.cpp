@@ -69,9 +69,9 @@ void las::Instance::calculateTransform()
 	if (m_transformDirty) {
 		glm::mat4 translation, rotation, scale;
 
-		glm::translate(translation, m_pos);
+		translation = glm::translate(glm::mat4(1), m_pos);
 		rotation = mat4_cast(glm::quat(m_rotation));
-		glm::scale(scale, m_scale);
+		scale = glm::scale(glm::mat4(1), m_scale);
 
 		m_transform = translation * rotation * scale;
 

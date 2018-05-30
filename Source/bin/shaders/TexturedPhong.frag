@@ -16,7 +16,8 @@ struct PointLight{
 	vec4 specular;
 	float linAtten;
 	float quadAtten;
-	float pad[2];
+	float pad1;
+	float pad2;
 };
 
 struct SpotLight{
@@ -53,17 +54,17 @@ uniform vec3 Ia; // ambient colour
 layout (std140) uniform DirLights{
 	DirectionalLight arrDirLights[MAX_DIR_LIGHTS];
 	int numDirLights;
-}
+};
 
 layout (std140) uniform PointLights{
 	PointLight arrPointLights[MAX_POINT_LIGHTS];
 	int numPointLights;
-}
+};
 
 layout (std140) uniform SpotLights{
 	SpotLight arrSpotLights[MAX_SPOT_LIGHTS];
 	int numSpotLights;
-}
+};
 
 uniform sampler2D diffuseTexture;
 uniform sampler2D specularTexture;
@@ -131,7 +132,7 @@ Intensities calculateDirLight(DirectionalLight light, vec3 N, vec3 V){
 	vec3 R = reflect(L, N);
 
 	// calculate lambert term
-	float lambertTerm = max(0, min(1, dot(N, -L)));
+	float lambertTerm = clamp(dot(N, -L), 0.0f, 1.0f);
 	
 	// calculate specular terms
 	float specularTerm = pow( max( 0, dot(R, V)), specularPower);
@@ -145,7 +146,6 @@ Intensities calculateDirLight(DirectionalLight light, vec3 N, vec3 V){
 }
 
 Intensities calculatePointLight(PointLight light, vec3 N, vec3 V){
-	Intensities intensities;
 	vec3 displacement = vPosition.xyz - light.position.xyz;
 	vec3 direction = normalize(displacement);
 	float distance = length(displacement);
@@ -156,20 +156,20 @@ Intensities calculatePointLight(PointLight light, vec3 N, vec3 V){
 	float attenuation = 1.0 / (1.0 + light.linAtten * distance + light.quadAtten * distance * distance);
 
 	// calculate lambert term
-	float lambertTerm = max(0, min(1, dot(N, -direction)));
+	float lambertTerm = clamp(dot(N, -direction), 0.0f, 1.0f);
 	
 	// calculate specular terms
 	float specularTerm = pow( max( 0, dot(R, V)), specularPower);
 
+	Intensities intensities;
 	intensities.diffuse = light.diffuse.xyz * attenuation * lambertTerm;
 	intensities.specular = light.specular.xyz * attenuation * specularTerm;
 
+	
 	return intensities;
 }
 
 Intensities calculateSpotLight(SpotLight light, vec3 N, vec3 V){
-	Intensities intensities;
-	
 	vec3 displacement = vPosition.xyz - light.position.xyz;
 	vec3 direction = normalize(displacement);
 	vec3 lightDirection = normalize(light.direction.xyz);
@@ -178,7 +178,7 @@ Intensities calculateSpotLight(SpotLight light, vec3 N, vec3 V){
 	vec3 R = reflect(direction, N);
 	
 	// calculate lambert term
-	float lambertTerm = max(0, min(1, dot(N, -direction)));
+	float lambertTerm = clamp(dot(N, -direction), 0.0f, 1.0f);
 	
 	// calculate specular terms
 	float specularTerm = pow( max( 0, dot(R, V)), specularPower);
@@ -193,6 +193,7 @@ Intensities calculateSpotLight(SpotLight light, vec3 N, vec3 V){
 	
 	float attenuation = distanceAttenuation * angleAttenuation;
 	
+	Intensities intensities;
 	intensities.diffuse = light.diffuse.xyz * attenuation * lambertTerm;
 	intensities.specular = light.specular.xyz * attenuation * specularTerm;
 	
