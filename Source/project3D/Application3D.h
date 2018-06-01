@@ -38,5 +38,15 @@ namespace las {
 		DirectionalLight*		m_directionalLight;
 		PointLight*				m_pointLight;
 		SpotLight*				m_spotLight;
+
+		float					directionalYaw;
+		float					directionalPitch;
+
+		float					spotYaw;
+		float					spotPitch;
+
+		Colour					directionalColour;
+		Colour					pointColour;
+		Colour					spotColour;
 	};
 }

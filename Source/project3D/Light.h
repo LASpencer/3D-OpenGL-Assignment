@@ -3,6 +3,11 @@
 
 
 namespace las {
+	struct Colour {
+		glm::vec3 colour;
+		float intensity;
+	};
+
 	struct DirectionalLight {
 
 		DirectionalLight() {};
@@ -13,6 +18,10 @@ namespace las {
 		glm::vec3 direction;	glm::float32_t pad1;
 		glm::vec3 diffuse;		glm::float32_t pad2;
 		glm::vec3 specular;		glm::float32_t pad3;
+
+		void setColour(Colour colour) {
+			diffuse = specular = colour.colour * colour.intensity;
+		}
 	};
 
 	struct PointLight {
@@ -28,6 +37,10 @@ namespace las {
 		float quadraticAttenuation;
 		float pad3;
 		float pad4;
+
+		void setColour(Colour colour) {
+			diffuse = specular = colour.colour * colour.intensity;
+		}
 	};
 
 	struct SpotLight {
@@ -45,5 +58,8 @@ namespace las {
 		float linearAttenuation;
 		float quadraticAttenuation;
 
+		void setColour(Colour colour) {
+			diffuse = specular = colour.colour * colour.intensity;
+		}
 	};
 }
