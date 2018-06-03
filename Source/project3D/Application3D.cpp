@@ -121,36 +121,30 @@ void Application3D::update(float deltaTime) {
 	ImGui::End();
 
 	ImGui::Begin("Lights");
-	//TODO stuff to control lights
-	//TODO also have light intensity?
-	// store colour and intensity for each light, write to light struct afterwards
 	ImGui::Text("Directional Light");
-	//HACK
 	ImGui::ColorEdit3("Colour##directional", &directionalColour.colour.r);
 	ImGui::DragFloat("Intensity##directional", &directionalColour.intensity,0.01f,0.0f,10.f);
-	//TODO direction
 	ImGui::DragFloat("Yaw##directional", &directionalYaw, 0.01f, 0.0f, 6.28f, "%.3f rad");
 	ImGui::DragFloat("Pitch##directional", &directionalPitch, 0.01f, -3.14f, 3.14f, "%.3f rad");
 	//TODO maybe button/checkbox to force same colour?
+	
 	ImGui::Text("Point Light");
 	ImGui::ColorEdit3("Colour##point", &pointColour.colour.r);
 	ImGui::DragFloat("Intensity##point", &pointColour.intensity, 0.01f, 0.0f, 10.f);
 	ImGui::DragFloat3("Position##point", &m_pointLight->position.x, 0.1f);
 	ImGui::InputFloat("Linear Attenuation##point", &m_pointLight->linearAttenuation);
 	ImGui::InputFloat("Quadratic Attenuation##point", &m_pointLight->quadraticAttenuation);
+	
 	ImGui::Text("Spot Light");
 	ImGui::ColorEdit3("Colour##spot", &spotColour.colour.r);
 	ImGui::DragFloat("Intensity##spot", &spotColour.intensity, 0.01f, 0.0f, 10.f);
 	ImGui::DragFloat3("Position##spot", &m_spotLight->position.x, 0.1f);
-	//TODO direction
 	ImGui::DragFloat("Yaw##spot", &spotYaw, 0.01f, 0.0f, 6.28f, "%.3f rad");
 	ImGui::DragFloat("Pitch##spot", &spotPitch, 0.01f, -3.14f, 3.14f, "%.3f rad");
-
 	ImGui::InputFloat("Linear Attenuation##spot", &m_spotLight->linearAttenuation);
 	ImGui::InputFloat("Quadratic Attenuation##spot", &m_spotLight->quadraticAttenuation);
 	ImGui::DragFloat("Phi##spot", &m_spotLight->phi, 0.01f, 0.01f, 3.14f, "%.3f rad");
 	ImGui::DragFloat("Theta##spot", &m_spotLight->theta, 0.01f, 0.01f, 3.14f, "%.3f rad");
-	//TODO
 	ImGui::End();
 
 	m_directionalLight->direction = vec3(sin(directionalYaw) * cos(directionalPitch), sin(directionalPitch), cos(directionalYaw) * cos(directionalPitch));

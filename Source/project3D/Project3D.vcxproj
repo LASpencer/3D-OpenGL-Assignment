@@ -174,6 +174,7 @@
     <ClCompile Include="OBJMesh.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="ScreenQuad.cpp" />
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
