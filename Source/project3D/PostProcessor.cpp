@@ -75,24 +75,12 @@ void las::PostProcessor::unbind()
 
 void las::PostProcessor::draw(aie::Application* app)
 {
-	// TODO bind next rendertarget and shader
-	// TODO render that stage
-	// TODO eventually draw m_screen
-	m_edgeShader.bind();
-	m_edge.bind();
-	app->clearScreen();
-
-	m_rawRender.getTarget(0).bind(0);
-	m_edgeShader.bindUniform("colourTarget", 0);
-	m_screen.draw();
-
-	//HACK
-	m_edge.unbind();
-
-	//TODO instead write to wave buffer, then combine (edge, with wavy haze behind)
+	// Apply wave 
 	m_waveShader.bind();
 	m_waveRender.bind();
 	app->clearScreen();
+
+	m_rawRender.getTarget(0).bind(0);
 
 	m_waveShader.bindUniform("colourTarget", 0);
 	m_waveShader.bindUniform("amplitude", 0.005f);
@@ -105,6 +93,18 @@ void las::PostProcessor::draw(aie::Application* app)
 	m_waveRender.unbind();
 
 	//app->clearScreen();
+
+	m_edgeShader.bind();
+	m_edge.bind();
+	app->clearScreen();
+
+	m_waveRender.getTarget(0).bind(0);
+	m_edgeShader.bindUniform("colourTarget", 0);
+	m_screen.draw();
+
+	m_edge.unbind();
+
+	//TODO blur the wavy image, then apply the unblurred edges over it
 
 	m_addEdgeShader.bind();
 
