@@ -24,10 +24,12 @@ namespace las {
 	protected:
 		aie::RenderTarget m_rawRender;
 		aie::RenderTarget m_edge;
+		aie::RenderTarget m_blurRender;
 		aie::RenderTarget m_waveRender;
 
 		aie::ShaderProgram m_edgeShader;
 		aie::ShaderProgram m_waveShader;
+		aie::ShaderProgram m_blurShader;
 		aie::ShaderProgram m_addEdgeShader;
 
 		ScreenQuad m_screen;
