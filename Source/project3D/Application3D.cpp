@@ -27,6 +27,8 @@ bool Application3D::startup() {
 
 	m_scene = new Scene();
 
+	m_postProcessor = new PostProcessor();
+
 	// initialise gizmo primitive counts
 	Gizmos::create(10000, 10000, 10000, 10000);
 
@@ -38,15 +40,31 @@ bool Application3D::startup() {
 
 	m_texturedPhong.loadShader(aie::eShaderStage::VERTEX, "./shaders/texturedPhong.vert");
 	m_texturedPhong.loadShader(aie::eShaderStage::FRAGMENT, "./shaders/texturedPhong.frag");
+
+	m_phong.loadShader(aie::eShaderStage::VERTEX, "./shaders/texturedPhong.vert");
+	m_phong.loadShader(aie::eShaderStage::FRAGMENT, "./shaders/Phong.frag");
 	
 	if (m_texturedPhong.link() == false) {
 		printf("Textured Phong shader error: %s\n", m_texturedPhong.getLastError());
 		return false;
 	}
 
+	if (m_phong.link() == false) {
+		printf("Phong shader error: %s\n", m_phong.getLastError());
+		return false;
+	}
+
+	if (!m_postProcessor->initialise(getWindowWidth(), getWindowHeight())) {
+		return false;
+	}
+
 	// Load obj files
 	if (m_spearMesh.load("./models/soulspear.obj", true, true) == false) {
 		printf("Could not load Spear mesh\n");
+	}
+
+	if (m_dragonMesh.load("./models/dragon.obj", true, true) == false) {
+		printf("Could not load Dragon mesh\n");
 	}
 
 	m_scene->addInstance(new Instance(vec3(0), vec3(0), vec3(1), &m_texturedPhong, &m_spearMesh));
@@ -58,6 +76,8 @@ bool Application3D::startup() {
 	m_scene->addInstance(new Instance(vec3(-2, 0, -2), vec3(1), vec3(2, 0.5, 3), &m_texturedPhong, &m_spearMesh));
 
 	m_scene->addInstance(new Instance(vec3(3, 0, -3), vec3(0), vec3(1), &m_texturedPhong, &m_spearMesh));
+
+	m_scene->addInstance(new Instance(vec3(5, 0, 3), vec3(0), vec3(0.5f), &m_phong, &m_dragonMesh));
 
 	// Set up lighting
 	m_scene->setAmbient(vec3(0.05));
@@ -84,6 +104,7 @@ void Application3D::shutdown() {
 
 	Gizmos::destroy();
 	delete m_camera;
+	delete m_postProcessor;
 	delete m_scene;
 }
 
@@ -168,6 +189,9 @@ void Application3D::draw() {
 
 	// update perspective in case window resized
 	m_camera->setAspectRatio(getWindowWidth() / (float)getWindowHeight());
+	m_postProcessor->setAspectRatio(getWindowWidth(), getWindowHeight());
+
+	m_postProcessor->bind(this);
 
 	m_scene->draw(m_camera);
 
@@ -176,4 +200,8 @@ void Application3D::draw() {
 
 	// draw 2D gizmos using an orthogonal projection matrix (or screen dimensions)
 	Gizmos::draw2D((float)getWindowWidth(), (float)getWindowHeight());
+
+	m_postProcessor->unbind();
+
+	m_postProcessor->draw(this);
 }

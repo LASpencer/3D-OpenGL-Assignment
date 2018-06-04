@@ -1,16 +1,15 @@
 #pragma once
-#include <glm/glm.hpp>
 
 namespace las {
 	class ScreenQuad {
 	public:
-
 		ScreenQuad();
+
 		~ScreenQuad();
 
 		void draw();
 
-	protected:
+	private:
 		unsigned int vao, vbo;
 	};
 }

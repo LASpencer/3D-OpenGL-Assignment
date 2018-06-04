@@ -90,4 +90,15 @@ void RenderTarget::unbind() {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void RenderTarget::setAspectRatio(unsigned int width, unsigned int height)
+{
+	if (width != m_width || height != m_height) {
+		delete[] m_targets;
+		glDeleteRenderbuffers(1, &m_rbo);
+		glDeleteFramebuffers(1, &m_fbo);
+
+		initialise(m_targetCount, width, height);
+	}
+}
+
 } // namespace aie

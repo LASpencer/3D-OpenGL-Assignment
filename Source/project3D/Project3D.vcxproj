@@ -172,6 +172,7 @@
     <ClCompile Include="Instance.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OBJMesh.cpp" />
+    <ClCompile Include="PostProcessor.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ScreenQuad.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="Instance.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="OBJMesh.h" />
+    <ClInclude Include="PostProcessor.h" />
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ScreenQuad.h" />
@@ -191,8 +193,14 @@
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\bin\shaders\AddEdge.frag" />
+    <None Include="..\bin\shaders\BoxBlur.frag" />
+    <None Include="..\bin\shaders\EdgeDetection.frag" />
+    <None Include="..\bin\shaders\post.vert" />
+    <None Include="..\bin\shaders\Sharpen.frag" />
     <None Include="..\bin\shaders\TexturedPhong.frag" />
     <None Include="..\bin\shaders\TexturedPhong.vert" />
+    <None Include="..\bin\shaders\Wave.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
