@@ -78,9 +78,9 @@ void las::PostProcessor::draw(aie::Application* app)
 	// TODO bind next rendertarget and shader
 	// TODO render that stage
 	// TODO eventually draw m_screen
-	app->clearScreen();
 	m_edgeShader.bind();
 	m_edge.bind();
+	app->clearScreen();
 
 	m_rawRender.getTarget(0).bind(0);
 	m_edgeShader.bindUniform("colourTarget", 0);
@@ -88,11 +88,12 @@ void las::PostProcessor::draw(aie::Application* app)
 
 	//HACK
 	m_edge.unbind();
-	app->clearScreen();
 
 	//TODO instead write to wave buffer, then combine (edge, with wavy haze behind)
 	m_waveShader.bind();
-	//m_waveRender.bind();
+	m_waveRender.bind();
+	app->clearScreen();
+
 	m_waveShader.bindUniform("colourTarget", 0);
 	m_waveShader.bindUniform("amplitude", 0.005f);
 	m_waveShader.bindUniform("numWaves", 5.0f);
@@ -101,16 +102,18 @@ void las::PostProcessor::draw(aie::Application* app)
 
 	m_screen.draw();
 
-	/*m_waveRender.unbind();
-	app->clearScreen();
+	m_waveRender.unbind();
+
+	//app->clearScreen();
 
 	m_addEdgeShader.bind();
 
 	m_addEdgeShader.bindUniform("colourTarget", 0);
 	m_addEdgeShader.bindUniform("edgeTarget", 1);
+	m_addEdgeShader.bindUniform("edgeColour", glm::vec4(1, 1, 0, 0.5f));
 
 	m_waveRender.getTarget(0).bind(0);
 	m_edge.getTarget(0).bind(1);
 
-	m_screen.draw();*/
+	m_screen.draw();
 }
