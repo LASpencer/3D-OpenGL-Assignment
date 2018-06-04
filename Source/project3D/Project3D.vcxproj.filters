@@ -45,6 +45,12 @@
     <ClCompile Include="FlyCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ScreenQuad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PostProcessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application3D.h">
@@ -80,12 +86,21 @@
     <ClInclude Include="FlyCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PostProcessor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\shaders\TexturedPhong.frag">
       <Filter>Shaders</Filter>
     </None>
     <None Include="..\bin\shaders\TexturedPhong.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\post.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\EdgeDetection.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

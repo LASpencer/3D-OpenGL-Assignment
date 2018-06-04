@@ -19,6 +19,8 @@ public:
 	unsigned int	getWidth() const { return m_width; }
 	unsigned int	getHeight() const { return m_height; }
 
+	void			setAspectRatio(unsigned int width, unsigned int height);
+
 	unsigned int	getFrameBufferHandle() const { return m_fbo; }
 
 	unsigned int	getTargetCount() const { return m_targetCount; }
