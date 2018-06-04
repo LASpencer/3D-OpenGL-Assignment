@@ -53,5 +53,6 @@ namespace las {
 		Colour					directionalColour;
 		Colour					pointColour;
 		Colour					spotColour;
+
 	};
 }

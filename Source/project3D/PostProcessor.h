@@ -21,6 +21,13 @@ namespace las {
 
 		virtual void draw(aie::Application* app);
 
+		//HACK
+		glm::vec4		outlineColour = { 0,1,1,0.5f };
+		float			waveAmplitude = 0.005f;
+		float			numWaves = 5.f;
+		glm::vec2		waveDirection = { 1,0 };
+		float			waveSpeed = 1.0f;
+
 	protected:
 		aie::RenderTarget m_rawRender;
 		aie::RenderTarget m_edge;

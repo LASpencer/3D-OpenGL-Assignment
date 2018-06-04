@@ -33,7 +33,7 @@ bool Application3D::startup() {
 	Gizmos::create(10000, 10000, 10000, 10000);
 
 	// create simple camera transforms
-	m_camera = new FlyCamera(vec3(10), vec3(0));
+	m_camera = new FlyCamera(vec3(-4,5,-4), vec3(5,0,5));
 	m_camera->setPerspective(glm::pi<float>() * 0.25f,
 		getWindowWidth() / (float)getWindowHeight(),
 		0.1f, 1000.f);
@@ -77,7 +77,7 @@ bool Application3D::startup() {
 
 	m_scene->addInstance(new Instance(vec3(3, 0, -3), vec3(0), vec3(1), &m_texturedPhong, &m_spearMesh));
 
-	m_scene->addInstance(new Instance(vec3(5, 0, 3), vec3(0), vec3(0.5f), &m_phong, &m_dragonMesh));
+	m_scene->addInstance(new Instance(vec3(5, 0, 5), vec3(0), vec3(0.5f), &m_phong, &m_dragonMesh));
 
 	// Set up lighting
 	m_scene->setAmbient(vec3(0.05));
@@ -90,8 +90,8 @@ bool Application3D::startup() {
 
 	directionalPitch = 0.22f;
 	directionalYaw = 0.5f;
-	spotPitch = 0.66f;
-	spotYaw = 5.57f;
+	spotPitch = 0.4f;
+	spotYaw = 0.35;
 
 	directionalColour = { vec3(0,0,1), 1 };
 	spotColour = { vec3{1,0,0}, 3 };
@@ -174,6 +174,14 @@ void Application3D::update(float deltaTime) {
 	m_directionalLight->setColour(directionalColour);
 	m_pointLight->setColour(pointColour);
 	m_spotLight->setColour(spotColour);
+
+	ImGui::Begin("Post Processing");
+	ImGui::ColorEdit4("Outline Colour", &m_postProcessor->outlineColour.r);
+	ImGui::Text("Wave");
+	ImGui::DragFloat("Wave Amplitude", &m_postProcessor->waveAmplitude, 0.0002f, 0, 0.2f);
+	ImGui::DragFloat("Num Waves", &m_postProcessor->numWaves,0.1f,0,20);
+	ImGui::DragFloat("Wave speed", &m_postProcessor->waveSpeed,0.1f,0,50);
+	ImGui::End();
 
 	// quit if we press escape
 	aie::Input* input = aie::Input::getInstance();

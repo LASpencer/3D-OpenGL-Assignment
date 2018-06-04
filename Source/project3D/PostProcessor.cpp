@@ -1,4 +1,5 @@
 #include "PostProcessor.h"
+#include "Application3D.h"
 
 las::PostProcessor::PostProcessor()
 {
@@ -96,10 +97,10 @@ void las::PostProcessor::draw(aie::Application* app)
 	m_rawRender.getTarget(0).bind(0);
 
 	m_waveShader.bindUniform("colourTarget", 0);
-	m_waveShader.bindUniform("amplitude", 0.005f);
-	m_waveShader.bindUniform("numWaves", 5.0f);
-	m_waveShader.bindUniform("direction", glm::vec2(1, 0));
-	m_waveShader.bindUniform("offset", app->getTime() * 1.0f);
+	m_waveShader.bindUniform("amplitude", waveAmplitude);
+	m_waveShader.bindUniform("numWaves", numWaves);
+	m_waveShader.bindUniform("direction", waveDirection);
+	m_waveShader.bindUniform("offset", app->getTime() * waveSpeed);
 
 	m_screen.draw();
 
@@ -132,7 +133,7 @@ void las::PostProcessor::draw(aie::Application* app)
 
 	m_addEdgeShader.bindUniform("colourTarget", 0);
 	m_addEdgeShader.bindUniform("edgeTarget", 1);
-	m_addEdgeShader.bindUniform("edgeColour", glm::vec4(1, 1, 0, 0.5f));
+	m_addEdgeShader.bindUniform("edgeColour", outlineColour);
 
 	m_waveRender.getTarget(0).bind(0);
 	m_edge.getTarget(0).bind(1);
