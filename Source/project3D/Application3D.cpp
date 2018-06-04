@@ -27,6 +27,8 @@ bool Application3D::startup() {
 
 	m_scene = new Scene();
 
+	m_postProcessor = new PostProcessor();
+
 	// initialise gizmo primitive counts
 	Gizmos::create(10000, 10000, 10000, 10000);
 
@@ -41,6 +43,10 @@ bool Application3D::startup() {
 	
 	if (m_texturedPhong.link() == false) {
 		printf("Textured Phong shader error: %s\n", m_texturedPhong.getLastError());
+		return false;
+	}
+
+	if (!m_postProcessor->initialise(getWindowWidth(), getWindowHeight())) {
 		return false;
 	}
 
@@ -84,6 +90,7 @@ void Application3D::shutdown() {
 
 	Gizmos::destroy();
 	delete m_camera;
+	delete m_postProcessor;
 	delete m_scene;
 }
 
@@ -174,6 +181,9 @@ void Application3D::draw() {
 
 	// update perspective in case window resized
 	m_camera->setAspectRatio(getWindowWidth() / (float)getWindowHeight());
+	m_postProcessor->setAspectRatio(getWindowWidth(), getWindowHeight());
+
+	m_postProcessor->bind(this);
 
 	m_scene->draw(m_camera);
 
@@ -182,4 +192,8 @@ void Application3D::draw() {
 
 	// draw 2D gizmos using an orthogonal projection matrix (or screen dimensions)
 	Gizmos::draw2D((float)getWindowWidth(), (float)getWindowHeight());
+
+	m_postProcessor->unbind();
+
+	m_postProcessor->draw(this);
 }

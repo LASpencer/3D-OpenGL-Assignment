@@ -193,10 +193,14 @@
     <ClInclude Include="Utility.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\bin\shaders\AddEdge.frag" />
+    <None Include="..\bin\shaders\BoxBlur.frag" />
     <None Include="..\bin\shaders\EdgeDetection.frag" />
     <None Include="..\bin\shaders\post.vert" />
+    <None Include="..\bin\shaders\Sharpen.frag" />
     <None Include="..\bin\shaders\TexturedPhong.frag" />
     <None Include="..\bin\shaders\TexturedPhong.vert" />
+    <None Include="..\bin\shaders\Wave.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -103,5 +103,17 @@
     <None Include="..\bin\shaders\EdgeDetection.frag">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\bin\shaders\Wave.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\BoxBlur.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\Sharpen.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\AddEdge.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -13,19 +13,22 @@ namespace las {
 
 		bool initialise(unsigned int width, unsigned int height);
 
-		// TODO setAspectRatio (try without first!)
+		virtual void setAspectRatio(unsigned int width, unsigned int height);
 
 		void bind(aie::Application* app);
 
 		void unbind();
 
-		void draw(aie::Application* app);
+		virtual void draw(aie::Application* app);
 
 	protected:
 		aie::RenderTarget m_rawRender;
 		aie::RenderTarget m_edge;
+		aie::RenderTarget m_waveRender;
 
 		aie::ShaderProgram m_edgeShader;
+		aie::ShaderProgram m_waveShader;
+		aie::ShaderProgram m_addEdgeShader;
 
 		ScreenQuad m_screen;
 	};

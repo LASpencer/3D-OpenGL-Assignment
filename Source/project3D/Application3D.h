@@ -12,6 +12,7 @@
 #include "Instance.h"
 #include "Light.h"
 #include "Scene.h"
+#include "PostProcessor.h"
 
 namespace las {
 	class Application3D : public aie::Application {
@@ -32,6 +33,8 @@ namespace las {
 		Scene*					m_scene;
 
 		aie::ShaderProgram		m_texturedPhong;
+
+		PostProcessor*			m_postProcessor;
 
 		OBJMesh					m_spearMesh;
 

@@ -31,16 +31,8 @@ void main(){
 	vec2 scale = (texSize - texelSize) / texSize;
 	vec2 texCoord = vTexCoord / scale + texelSize * 0.5f;
 	
-	// Detect edges
-	mat3 xKernel = mat3(-1, 0, 1,
-						-2, 0, 2,
-						-1, 0, 1);
-	mat3 yKernel = mat3(-1, -2, -1,
-						0, 0, 0,
-						1, 2, 1);
-	vec4 x = FilterKernel(texCoord, xKernel, 1);
-	vec4 y = FilterKernel(texCoord, yKernel, 1);
-	float value = sqrt(dot(x,x) + dot(y,y));
-	
-	FragColour = vec4(value, value, value, 1);
+	mat3 kernel = mat3( 0, -1, 0,
+						-1, 5, -1,
+						0, -1, 0);
+	FragColour = FilterKernel(texCoord, kernel, 1);
 }
