@@ -33,10 +33,12 @@ namespace las {
 		Scene*					m_scene;
 
 		aie::ShaderProgram		m_texturedPhong;
+		aie::ShaderProgram		m_phong;
 
 		PostProcessor*			m_postProcessor;
 
 		OBJMesh					m_spearMesh;
+		OBJMesh					m_dragonMesh;
 
 		DirectionalLight*		m_directionalLight;
 		PointLight*				m_pointLight;

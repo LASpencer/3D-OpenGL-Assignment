@@ -40,9 +40,17 @@ bool Application3D::startup() {
 
 	m_texturedPhong.loadShader(aie::eShaderStage::VERTEX, "./shaders/texturedPhong.vert");
 	m_texturedPhong.loadShader(aie::eShaderStage::FRAGMENT, "./shaders/texturedPhong.frag");
+
+	m_phong.loadShader(aie::eShaderStage::VERTEX, "./shaders/texturedPhong.vert");
+	m_phong.loadShader(aie::eShaderStage::FRAGMENT, "./shaders/Phong.frag");
 	
 	if (m_texturedPhong.link() == false) {
 		printf("Textured Phong shader error: %s\n", m_texturedPhong.getLastError());
+		return false;
+	}
+
+	if (m_phong.link() == false) {
+		printf("Phong shader error: %s\n", m_phong.getLastError());
 		return false;
 	}
 
@@ -55,6 +63,10 @@ bool Application3D::startup() {
 		printf("Could not load Spear mesh\n");
 	}
 
+	if (m_dragonMesh.load("./models/dragon.obj", true, true) == false) {
+		printf("Could not load Dragon mesh\n");
+	}
+
 	m_scene->addInstance(new Instance(vec3(0), vec3(0), vec3(1), &m_texturedPhong, &m_spearMesh));
 
 	m_scene->addInstance(new Instance(vec3(2,0,2), vec3(1), vec3(1), &m_texturedPhong, &m_spearMesh));
@@ -64,6 +76,8 @@ bool Application3D::startup() {
 	m_scene->addInstance(new Instance(vec3(-2, 0, -2), vec3(1), vec3(2, 0.5, 3), &m_texturedPhong, &m_spearMesh));
 
 	m_scene->addInstance(new Instance(vec3(3, 0, -3), vec3(0), vec3(1), &m_texturedPhong, &m_spearMesh));
+
+	m_scene->addInstance(new Instance(vec3(5, 0, 3), vec3(0), vec3(0.5f), &m_phong, &m_dragonMesh));
 
 	// Set up lighting
 	m_scene->setAmbient(vec3(0.05));
