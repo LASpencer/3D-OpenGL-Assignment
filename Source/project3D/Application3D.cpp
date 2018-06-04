@@ -22,7 +22,7 @@ Application3D::~Application3D() {
 }
 
 bool Application3D::startup() {
-	
+
 	setBackgroundColour(0.25f, 0.25f, 0.25f);
 
 	m_scene = new Scene();
@@ -33,7 +33,7 @@ bool Application3D::startup() {
 	Gizmos::create(10000, 10000, 10000, 10000);
 
 	// create simple camera transforms
-	m_camera = new FlyCamera(vec3(-4,5,-4), vec3(5,0,5));
+	m_camera = new FlyCamera(vec3(-4, 5, -4), vec3(5, 0, 5));
 	m_camera->setPerspective(glm::pi<float>() * 0.25f,
 		getWindowWidth() / (float)getWindowHeight(),
 		0.1f, 1000.f);
@@ -43,7 +43,7 @@ bool Application3D::startup() {
 
 	m_phong.loadShader(aie::eShaderStage::VERTEX, "./shaders/texturedPhong.vert");
 	m_phong.loadShader(aie::eShaderStage::FRAGMENT, "./shaders/Phong.frag");
-	
+
 	if (m_texturedPhong.link() == false) {
 		printf("Textured Phong shader error: %s\n", m_texturedPhong.getLastError());
 		return false;
@@ -67,17 +67,40 @@ bool Application3D::startup() {
 		printf("Could not load Dragon mesh\n");
 	}
 
+	if (m_chairMesh.load("./models/chair02.obj", true, true) == false) {
+		printf("Could not load Chair mesh\n");
+	}
+
+	if (m_foxMesh.load("./models/Fox.obj", true, true) == false) {
+		printf("Could not load Fox mesh\n");
+	}
+
+	if (m_shibaMesh.load("./models/ShibaInu.obj", true, true) == false) {
+		printf("Could not load Shiba mesh\n");
+	}
+
+	if (m_deerMesh.load("./models/Deer.obj", true, true) == false) {
+		printf("Could not load Deer mesh\n");
+	}
+
 	m_scene->addInstance(new Instance(vec3(0), vec3(0), vec3(1), &m_texturedPhong, &m_spearMesh));
 
 	m_scene->addInstance(new Instance(vec3(2,0,2), vec3(1), vec3(1), &m_texturedPhong, &m_spearMesh));
 
-	m_scene->addInstance(new Instance(vec3(-2, 0, 2), vec3(0), vec3(2,0.5,3), &m_texturedPhong, &m_spearMesh));
+	m_scene->addInstance(new Instance(vec3(-2, 0, 2), vec3(0), vec3(0.01f), &m_texturedPhong, &m_chairMesh));
 
 	m_scene->addInstance(new Instance(vec3(-2, 0, -2), vec3(1), vec3(2, 0.5, 3), &m_texturedPhong, &m_spearMesh));
 
 	m_scene->addInstance(new Instance(vec3(3, 0, -3), vec3(0), vec3(1), &m_texturedPhong, &m_spearMesh));
 
 	m_scene->addInstance(new Instance(vec3(5, 0, 5), vec3(0), vec3(0.5f), &m_phong, &m_dragonMesh));
+
+	m_scene->addInstance(new Instance(vec3(-5, 0, -5), vec3(0), vec3(1), &m_phong, &m_foxMesh));
+
+	m_scene->addInstance(new Instance(vec3(-2, 0, -6), vec3(0), vec3(2.5f), &m_phong, &m_deerMesh));
+
+	m_scene->addInstance(new Instance(vec3(-8, 0, -5), vec3(0), vec3(1), &m_phong, &m_shibaMesh));
+
 
 	// Set up lighting
 	m_scene->setAmbient(vec3(0.05));

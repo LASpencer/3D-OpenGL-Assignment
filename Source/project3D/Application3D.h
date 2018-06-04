@@ -39,6 +39,10 @@ namespace las {
 
 		OBJMesh					m_spearMesh;
 		OBJMesh					m_dragonMesh;
+		OBJMesh					m_deerMesh;
+		OBJMesh					m_foxMesh;
+		OBJMesh					m_shibaMesh;
+		OBJMesh					m_chairMesh;
 
 		DirectionalLight*		m_directionalLight;
 		PointLight*				m_pointLight;
