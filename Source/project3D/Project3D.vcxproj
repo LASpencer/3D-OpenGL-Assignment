@@ -195,7 +195,9 @@
   <ItemGroup>
     <None Include="..\bin\shaders\AddEdge.frag" />
     <None Include="..\bin\shaders\BoxBlur.frag" />
+    <None Include="..\bin\shaders\DiffuseTextured.frag" />
     <None Include="..\bin\shaders\EdgeDetection.frag" />
+    <None Include="..\bin\shaders\GlowMapTextured.frag" />
     <None Include="..\bin\shaders\post.vert" />
     <None Include="..\bin\shaders\Sharpen.frag" />
     <None Include="..\bin\shaders\TexturedPhong.frag" />

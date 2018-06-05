@@ -115,5 +115,11 @@
     <None Include="..\bin\shaders\AddEdge.frag">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\bin\shaders\GlowMapTextured.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\bin\shaders\DiffuseTextured.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

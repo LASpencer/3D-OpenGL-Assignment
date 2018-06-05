@@ -59,6 +59,7 @@ bool OBJMesh::load(const char* filename, bool loadTextures /* = true */, bool fl
 		m_materials[index].specularHighlightTexture.load((folder + m.specular_highlight_texname).c_str());
 		m_materials[index].normalTexture.load((folder + m.bump_texname).c_str());
 		m_materials[index].displacementTexture.load((folder + m.displacement_texname).c_str());
+		m_materials[index].emissiveTexture.load((folder + m.emissive_texname).c_str());
 
 		++index;
 	}
@@ -172,6 +173,7 @@ void OBJMesh::draw(bool usePatches /* = false */) {
 	int specHighlightTexUniform = glGetUniformLocation(program, "specularHighlightTexture");
 	int normalTexUniform = glGetUniformLocation(program, "normalTexture");
 	int dispTexUniform = glGetUniformLocation(program, "displacementTexture");
+	int glowTexUniform = glGetUniformLocation(program, "emissiveTexture");
 
 	// set texture slots (these don't change per material)
 	if (diffuseTexUniform >= 0)
@@ -188,6 +190,8 @@ void OBJMesh::draw(bool usePatches /* = false */) {
 		glUniform1i(normalTexUniform, 5);
 	if (dispTexUniform >= 0)
 		glUniform1i(dispTexUniform, 6);
+	if (glowTexUniform >= 0)
+		glUniform1i(glowTexUniform, 7);
 
 	int currentMaterial = -1;
 
@@ -250,6 +254,12 @@ void OBJMesh::draw(bool usePatches /* = false */) {
 			if (m_materials[currentMaterial].displacementTexture.getHandle() > 0)
 				glBindTexture(GL_TEXTURE_2D, m_materials[currentMaterial].displacementTexture.getHandle());
 			else if (dispTexUniform >= 0)
+				glBindTexture(GL_TEXTURE_2D, 0);
+
+			glActiveTexture(GL_TEXTURE7);
+			if (m_materials[currentMaterial].emissiveTexture.getHandle() > 0)
+				glBindTexture(GL_TEXTURE_2D, m_materials[currentMaterial].emissiveTexture.getHandle());
+			else if (glowTexUniform >= 0)
 				glBindTexture(GL_TEXTURE_2D, 0);
 		}
 

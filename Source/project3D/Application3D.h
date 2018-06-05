@@ -34,6 +34,8 @@ namespace las {
 
 		aie::ShaderProgram		m_texturedPhong;
 		aie::ShaderProgram		m_phong;
+		aie::ShaderProgram		m_diffuseTexture;
+		aie::ShaderProgram		m_glowTexture;
 
 		PostProcessor*			m_postProcessor;
 
@@ -43,6 +45,11 @@ namespace las {
 		OBJMesh					m_foxMesh;
 		OBJMesh					m_shibaMesh;
 		OBJMesh					m_chairMesh;
+		OBJMesh					m_corvetteMesh;
+		OBJMesh					m_carrierMesh;
+		OBJMesh					m_cruiserMesh;
+		OBJMesh					m_destroyerMesh;
+		OBJMesh					m_frigateMesh;
 
 		DirectionalLight*		m_directionalLight;
 		PointLight*				m_pointLight;

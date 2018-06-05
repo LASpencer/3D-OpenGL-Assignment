@@ -46,6 +46,7 @@ public:
 		aie::Texture specularHighlightTexture;	// bound slot 4
 		aie::Texture normalTexture;				// bound slot 5
 		aie::Texture displacementTexture;		// bound slot 6
+		aie::Texture emissiveTexture;			// bound slot 7
 	};
 
 	OBJMesh() {}

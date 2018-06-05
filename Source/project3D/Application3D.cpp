@@ -44,6 +44,14 @@ bool Application3D::startup() {
 	m_phong.loadShader(aie::eShaderStage::VERTEX, "./shaders/texturedPhong.vert");
 	m_phong.loadShader(aie::eShaderStage::FRAGMENT, "./shaders/Phong.frag");
 
+	m_diffuseTexture.loadShader(aie::eShaderStage::VERTEX, "./shaders/texturedPhong.vert");
+	m_diffuseTexture.loadShader(aie::eShaderStage::FRAGMENT, "./shaders/DiffuseTextured.frag");
+
+	m_glowTexture.loadShader(aie::eShaderStage::VERTEX, "./shaders/texturedPhong.vert");
+	m_glowTexture.loadShader(aie::eShaderStage::FRAGMENT, "./shaders/GlowMapTextured.frag");
+
+	//TODO shaders for chair (no bump or specular map), spaceships (have glowmap)
+
 	if (m_texturedPhong.link() == false) {
 		printf("Textured Phong shader error: %s\n", m_texturedPhong.getLastError());
 		return false;
@@ -51,6 +59,16 @@ bool Application3D::startup() {
 
 	if (m_phong.link() == false) {
 		printf("Phong shader error: %s\n", m_phong.getLastError());
+		return false;
+	}
+
+	if (m_diffuseTexture.link() == false) {
+		printf("Diffuse shader error: %s/n", m_diffuseTexture.getLastError());
+		return false;
+	}
+
+	if (m_glowTexture.link() == false) {
+		printf("Glow shader error: %s/n", m_glowTexture.getLastError());
 		return false;
 	}
 
@@ -83,11 +101,31 @@ bool Application3D::startup() {
 		printf("Could not load Deer mesh\n");
 	}
 
+	if (m_corvetteMesh.load("./models/spaceships/corvette01.obj", true, true) == false) {
+		printf("Could not load Corvette mesh\n");
+	}
+
+	if (m_carrierMesh.load("./models/spaceships/carrier01.obj", true, true) == false) {
+		printf("Could not load carrier mesh\n");
+	}
+
+	if (m_cruiserMesh.load("./models/spaceships/cruiser01.obj", true, true) == false) {
+		printf("Could not load cruiser mesh\n");
+	}
+
+	if (m_frigateMesh.load("./models/spaceships/frigate01.obj", true, true) == false) {
+		printf("Could not load frigate mesh\n");
+	}
+
+	if (m_destroyerMesh.load("./models/spaceships/destroyer01.obj", true, true) == false) {
+		printf("Could not load destroyer mesh\n");
+	}
+
 	m_scene->addInstance(new Instance(vec3(0), vec3(0), vec3(1), &m_texturedPhong, &m_spearMesh));
 
 	m_scene->addInstance(new Instance(vec3(2,0,2), vec3(1), vec3(1), &m_texturedPhong, &m_spearMesh));
 
-	m_scene->addInstance(new Instance(vec3(-2, 0, 2), vec3(0), vec3(0.01f), &m_texturedPhong, &m_chairMesh));
+	m_scene->addInstance(new Instance(vec3(-2, 0, 2), vec3(0), vec3(0.01f), &m_diffuseTexture, &m_chairMesh));
 
 	m_scene->addInstance(new Instance(vec3(-2, 0, -2), vec3(1), vec3(2, 0.5, 3), &m_texturedPhong, &m_spearMesh));
 
@@ -101,6 +139,12 @@ bool Application3D::startup() {
 
 	m_scene->addInstance(new Instance(vec3(-8, 0, -5), vec3(0), vec3(1), &m_phong, &m_shibaMesh));
 
+	// HACK instead store corvette somewhere, make it fly around
+	m_scene->addInstance(new Instance(vec3(-5, 5, -5), vec3(0), vec3(1), &m_glowTexture, &m_corvetteMesh));
+	m_scene->addInstance(new Instance(vec3(-18, 10, -3), vec3(0), vec3(1), &m_glowTexture, &m_cruiserMesh));
+	m_scene->addInstance(new Instance(vec3(-10, 5, -10), vec3(0), vec3(1), &m_glowTexture, &m_destroyerMesh));
+	m_scene->addInstance(new Instance(vec3(8, 5, 10), vec3(0), vec3(1), &m_glowTexture, &m_frigateMesh));
+	m_scene->addInstance(new Instance(vec3(10, 10, 10), vec3(0), vec3(1), &m_glowTexture, &m_carrierMesh));
 
 	// Set up lighting
 	m_scene->setAmbient(vec3(0.05));
